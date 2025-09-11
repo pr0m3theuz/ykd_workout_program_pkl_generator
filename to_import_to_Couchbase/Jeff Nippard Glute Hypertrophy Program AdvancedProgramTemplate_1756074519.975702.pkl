@@ -1,0 +1,4278 @@
+class Program {
+  name: String
+  arthur: String
+  shortDescription: String
+  description: String
+  programLength: String
+  uri: String
+  level: String
+  programEquipment: String
+  daysPerWeek: String
+  mesocycles: Listing<Mesocycle>
+}
+
+class Mesocycle {
+  name: String
+  description: String
+  order: Int
+  microcycles: Listing<Microcycle>
+}
+
+class Microcycle {
+  name: String
+  description: String = ""
+  order: Int
+  workouts: Listing<Workout>
+  advancedWorkouts: Listing<AdvancedWorkout>
+}
+
+class Workout {
+  name: String
+  day: Int
+  notes: Listing
+  exercisesSets: Listing<ExerciseSets>
+}
+
+class AdvancedWorkout {
+  name: String
+  day: Int
+  notes: Listing<String>
+  exercisesSets: Listing<ExerciseSets>
+  advancedExercisesSets: Listing<AdvancedExerciseSets>
+}
+
+class ExerciseSets {
+  name: String
+  notes: Listing
+  // Number of sets to be performed
+  sets: Int
+  // Target Repetitions
+  repetitions: Int? = null
+
+  // Normal by default, Listing - length/number of elements must equal number of sets
+  setType: String = ""
+
+  targetWeightPounds: Float? = null
+  targetWeightKilograms: Float? = null
+
+  weightIncrementPounds: Float? = null
+  weightIncrementKilograms: Float? = null
+
+  targetRepetitionsInReserve: Int? = null // Reps in Reserve
+  targetRatePerceivedEffort: Int? = null // Rate of Perceived Exertion
+  percentage1RM: Float? = null // Percentage of 1 Rep Max
+
+  // TODO Determine Correct Type
+  progressionSchemeID: String? = null
+  minRepetitions: Int? = null
+  maxRepetitions: Int? = null
+}
+
+class AdvancedExerciseSets {
+  name: String
+  description: String? = null
+  notes: Listing<String>
+  sets: Int
+  setType: Int = 1
+  repetitions: Listing<Int>? = null
+  targetRepetitionsInReserve: Listing<Int>? = null
+  targetRatePerceivedEffort: Listing<Int>? = null
+  targetWeightPounds: Listing<Float>? = null
+  targetWeightKilograms: Listing<Float>? = null
+  weightIncrementPounds: Float? = null
+  weightIncrementKilograms: Float? = null
+  percentage1RM: Listing<Float>? = null
+  progressionSchemeID: String? = null
+  minRepetitions: Int? = null
+  maxRepetitions: Int? = null
+  setScheme: Listing<SetScheme>
+}
+
+class SetScheme {
+  sets: Int
+  setType: Int = 1
+  repetitions: Listing<Int>
+  targetWeightPounds: Listing<Float>
+  targetWeightKilograms: Listing<Float>
+  weightIncrementPounds: Float? = null
+  weightIncrementKilograms: Float? = null
+  targetRepetitionsInReserve: Listing<Int>
+  targetRatePerceivedEffort: Listing<Int> // rpe for each set
+  percentage1RM: Listing<Float>
+  progressionSchemeID: String? = null
+  minRepetitions: Int? = null
+  maxRepetitions: Int? = null
+}
+
+// --- Program Instance ---
+program = new Program {
+  name = "Jeff Nippard Glute Hypertrophy Program"
+  arthur = "Jeff Nippard"
+  description = "An 8-week program split into two blocks: Accumulation and Metabolic. It focuses on glute hypertrophy through a combination of heavy compound lifts and high-rep isolation exercises."
+  shortDescription = "An 8-week program split into two blocks: Accumulation and Metabolic. It focuses on glute hypertrophy through a combination of heavy compound lifts and high-rep isolation exercises."
+  programLength = "8 weeks"
+  level = "Advanced"
+  uri = "https://jeffnippard.com/products/glute-hypertrophy-program"
+  programEquipment = "Dumbbells, Barbell, Resistance Bands, Swiss Ball, Cable Machine, Leg Press Machine, Pec Deck"
+  daysPerWeek = "5"
+  mesocycles = new Listing<Mesocycle> {
+      new Mesocycle {
+      name = "Block 1 - Accumulation"
+      description = "Focuses on loading and volume accumulation, with a general trend toward more volume, load, and intensity."
+      order = 1
+      microcycles = new Listing<Microcycle> {
+          new Microcycle {
+          name = "Week 1"
+          description = "The first block is focused on getting adapted to the program's high volume and frequency."
+          order = 1
+          advancedWorkouts = new Listing<AdvancedWorkout> {
+              new AdvancedWorkout {
+              name = "Lower Body (Strength)"
+              day = 1
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Full Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      5
+                    }
+                  minRepetitions = 5
+                  maxRepetitions = 5
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Romanian Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      6
+                    }
+                  minRepetitions = 6
+                  maxRepetitions = 8
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Leg Curl"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Straight Hip Leg Curl (on stability ball)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      25
+                    }
+                  minRepetitions = 25
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Crunch"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body (Hypertrophy)"
+              day = 2
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Shoulder Press"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Close Grip Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Seated Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Reverse Fly (on pec deck)"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 3
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Hip Thrust"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Barbell Hip Thrust"
+                  sets = 1
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Standing Calf Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body + Glute (Metabolic)"
+              day = 4
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Cable Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      8
+                    }
+                  minRepetitions = 8
+                  maxRepetitions = 10
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Bent-over Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Incline Bench Press"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      10
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      0
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Goblet Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 5
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Walking Lunge"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      7
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      3
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Hyperextension (arms crossed)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      40
+                    }
+                  minRepetitions = 40
+                  maxRepetitions = 40
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 50
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+            }
+          }
+          new Microcycle {
+          name = "Week 2"
+          description = "The first block is focused on getting adapted to the program's high volume and frequency."
+          order = 2
+          advancedWorkouts = new Listing<AdvancedWorkout> {
+              new AdvancedWorkout {
+              name = "Lower Body (Strength)"
+              day = 1
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Full Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      6
+                    }
+                  minRepetitions = 6
+                  maxRepetitions = 6
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Romanian Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      6
+                    }
+                  minRepetitions = 6
+                  maxRepetitions = 8
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Leg Curl"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Straight Hip Leg Curl (on stability ball)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      25
+                    }
+                  minRepetitions = 25
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Crunch"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body (Hypertrophy)"
+              day = 2
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Shoulder Press"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Close Grip Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Seated Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Front Lateral Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Reverse Fly"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 3
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Hip Thrust"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      8
+                    }
+                  minRepetitions = 8
+                  maxRepetitions = 10
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Calf Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body + Glute (Metabolic)"
+              day = 4
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Cable Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      8
+                    }
+                  minRepetitions = 8
+                  maxRepetitions = 10
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Bent-over Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Incline Fly"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Front Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      10
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      0
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Goblet Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 5
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Walking Lunge"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      7
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      3
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Hyperextension (arms crossed)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      40
+                    }
+                  minRepetitions = 40
+                  maxRepetitions = 40
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 50
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+            }
+          }
+          new Microcycle {
+          name = "Week 3"
+          description = "The first block is focused on getting adapted to the program's high volume and frequency."
+          order = 3
+          advancedWorkouts = new Listing<AdvancedWorkout> {
+              new AdvancedWorkout {
+              name = "Lower Body (Strength)"
+              day = 1
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Full Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      6
+                    }
+                  minRepetitions = 6
+                  maxRepetitions = 6
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Romanian Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      6
+                    }
+                  minRepetitions = 6
+                  maxRepetitions = 8
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Leg Curl"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Straight Hip Leg Curl (on stability ball)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      25
+                    }
+                  minRepetitions = 25
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Crunch"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body (Hypertrophy)"
+              day = 2
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Shoulder Press"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Close Grip Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Seated Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Reverse Fly (on pec deck)"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 3
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Hip Thrust"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Barbell Hip Thrust"
+                  sets = 1
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Standing Calf Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body + Glute (Metabolic)"
+              day = 4
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Cable Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      8
+                    }
+                  minRepetitions = 8
+                  maxRepetitions = 10
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Bent-over Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Incline Bench Press"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      10
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      0
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Goblet Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 5
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Walking Lunge"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      7
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      3
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Bent-over Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Hyperextension (arms crossed)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      40
+                    }
+                  minRepetitions = 40
+                  maxRepetitions = 40
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 50
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+            }
+          }
+          new Microcycle {
+          name = "Week 4"
+          description = "The first block is focused on getting adapted to the program's high volume and frequency."
+          order = 4
+          advancedWorkouts = new Listing<AdvancedWorkout> {
+              new AdvancedWorkout {
+              name = "Lower Body (Strength)"
+              day = 1
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Full Squat"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      6
+                    }
+                  minRepetitions = 6
+                  maxRepetitions = 6
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Romanian Deadlift"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      6
+                    }
+                  minRepetitions = 6
+                  maxRepetitions = 8
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Leg Curl"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Straight Hip Leg Curl (on stability ball)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      25
+                    }
+                  minRepetitions = 25
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Crunch"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body (Hypertrophy)"
+              day = 2
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Shoulder Press"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Close Grip Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Seated Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Front Lateral Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Reverse Fly"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 3
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Hip Thrust"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      8
+                    }
+                  minRepetitions = 8
+                  maxRepetitions = 10
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Calf Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body + Glute (Metabolic)"
+              day = 4
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Cable Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      8
+                    }
+                  minRepetitions = 8
+                  maxRepetitions = 10
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Bent-over Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Incline Fly"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Front Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      10
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      0
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Goblet Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 5
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Walking Lunge"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Hyperextension (arms crossed)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      40
+                    }
+                  minRepetitions = 40
+                  maxRepetitions = 40
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 50
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+            }
+          }
+          new Microcycle {
+          name = "Week 5"
+          description = "The first block is focused on getting adapted to the program's high volume and frequency."
+          order = 5
+          advancedWorkouts = new Listing<AdvancedWorkout> {
+              new AdvancedWorkout {
+              name = "Lower Body (Strength)"
+              day = 1
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Full Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      7
+                    }
+                  minRepetitions = 7
+                  maxRepetitions = 7
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Romanian Deadlift"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      6
+                    }
+                  minRepetitions = 6
+                  maxRepetitions = 8
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Leg Curl"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Straight Hip Leg Curl (on stability ball)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      25
+                    }
+                  minRepetitions = 25
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Crunch"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body (Hypertrophy)"
+              day = 2
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Shoulder Press"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Close Grip Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Seated Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Reverse Fly (on pec deck)"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 3
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Hip Thrust"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Barbell Hip Thrust"
+                  sets = 1
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Standing Calf Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body + Glute (Metabolic)"
+              day = 4
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Cable Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      8
+                    }
+                  minRepetitions = 8
+                  maxRepetitions = 10
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Bent-over Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Incline Bench Press"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      10
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      0
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Goblet Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 5
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Walking Lunge"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Bent-over Glute Kickback"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Hyperextension (arms crossed)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      6
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      4
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      40
+                    }
+                  minRepetitions = 40
+                  maxRepetitions = 40
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 50
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+            }
+          }
+          new Microcycle {
+          name = "Week 6"
+          description = "The first block is focused on getting adapted to the program's high volume and frequency."
+          order = 6
+          advancedWorkouts = new Listing<AdvancedWorkout> {
+              new AdvancedWorkout {
+              name = "Lower Body (Strength)"
+              day = 1
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Full Squat"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      7
+                    }
+                  minRepetitions = 7
+                  maxRepetitions = 7
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Romanian Deadlift"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      6
+                    }
+                  minRepetitions = 6
+                  maxRepetitions = 8
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Leg Curl"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Straight Hip Leg Curl (on stability ball)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      25
+                    }
+                  minRepetitions = 25
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Crunch"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body (Hypertrophy)"
+              day = 2
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Shoulder Press"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Close Grip Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Seated Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Front Lateral Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Reverse Fly"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 3
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Hip Thrust"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      8
+                    }
+                  minRepetitions = 8
+                  maxRepetitions = 10
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Barbell Hip Thrust"
+                  sets = 1
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Calf Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body + Glute (Metabolic)"
+              day = 4
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Cable Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      8
+                    }
+                  minRepetitions = 8
+                  maxRepetitions = 10
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Bent-over Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Incline Fly"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Front Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      10
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      0
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Goblet Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      6
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      4
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 5
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Walking Lunge"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Hyperextension (arms crossed)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      40
+                    }
+                  minRepetitions = 40
+                  maxRepetitions = 40
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 50
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+      new Mesocycle {
+      name = "Block 2 - Metabolic Focus"
+      description = "Presents a novel two-week training stimulus focused on metabolic stress and functional deloading to allow for recovery and psychological novelty."
+      order = 2
+      microcycles = new Listing<Microcycle> {
+          new Microcycle {
+          name = "Week 7"
+          description = "This short block acts as a 'deload' to allow for recovery of connective tissues."
+          order = 7
+          advancedWorkouts = new Listing<AdvancedWorkout> {
+              new AdvancedWorkout {
+              name = "Lower Body (Strength)"
+              day = 1
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Full Squat"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      5
+                    }
+                  minRepetitions = 5
+                  maxRepetitions = 5
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      6
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      4
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Lying Leg Curl"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Straight Hip Leg Curl (on stability ball)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Crunch"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 2
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      25
+                    }
+                  minRepetitions = 25
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Reverse Fly (on pec deck)"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body + Glute (Metabolic)"
+              day = 3
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Hyperextension (arms crossed)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Goblet Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      7
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      3
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Bent-over Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 4
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Standing Calf Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Romanian Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Hip Abduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+            }
+          }
+          new Microcycle {
+          name = "Week 8"
+          description = "This short block acts as a 'deload' to allow for recovery of connective tissues."
+          order = 8
+          advancedWorkouts = new Listing<AdvancedWorkout> {
+              new AdvancedWorkout {
+              name = "Lower Body (Strength)"
+              day = 1
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Barbell Full Squat"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      5
+                    }
+                  minRepetitions = 5
+                  maxRepetitions = 5
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      6
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      4
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Lying Leg Curl"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Straight Hip Leg Curl (on stability ball)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Crunch"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 2
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      25
+                    }
+                  minRepetitions = 25
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      6
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      4
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Reverse Fly (on pec deck)"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Upper Body + Glute (Metabolic)"
+              day = 3
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Hyperextension (arms crossed)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Goblet Squat"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Abduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 25
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Glute Kickback"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Pulldown"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      7
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      3
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Bent-over Row"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+              new AdvancedWorkout {
+              name = "Lower Body (Hypertrophy)"
+              day = 4
+              advancedExercisesSets = new Listing<AdvancedExerciseSets> {
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      30
+                    }
+                  minRepetitions = 30
+                  maxRepetitions = 30
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Weighted Single Leg Hip Thrust (leg extended)"
+                  sets = 2
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      9
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      1
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Standing Calf Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Vertical Leg-Hip Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      10
+                    }
+                  minRepetitions = 10
+                  maxRepetitions = 12
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Romanian Deadlift"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Dumbbell Straight-back Straight-leg Deadlift"
+                  sets = 4
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable Hip Abduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      15
+                    }
+                  minRepetitions = 15
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Lever Seated Hip Adduction"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      20
+                    }
+                  minRepetitions = 20
+                  maxRepetitions = 20
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                  new AdvancedExerciseSets {
+                  name = "Cable One Arm Lateral Raise"
+                  sets = 3
+                  
+                  repetitions = new Listing<Int> {
+                      12
+                    }
+                  minRepetitions = 12
+                  maxRepetitions = 15
+                  targetRatePerceivedEffort = new Listing<Int> {
+                      8
+                    }
+                  targetRepetitionsInReserve = new Listing<Int> {
+                      2
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+}
