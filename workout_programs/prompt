@@ -1,0 +1,13 @@
+reformat the programs to "AdvancedProgramTemplete.csv"
+
+How to Use the AdvancedProgramTemplete.csv
+
+Here's how you would populate this template based on the Pkl file's structure:
+
+Program Details: The first seven columns (Program Name to Days Per Week) are for the top-level Program class. This information would be the same for all rows belonging to the same program.
+
+Mesocycle and Microcycle Details: The next six columns (Mesocycle Name to Microcycle Order) relate to the Mesocycle and Microcycle classes. This data would be repeated for every workout and exercise within that specific mesocycle and microcycle.
+
+Workout Details: Workout Name, Workout Day, and Workout Notes correspond to the Workout and AdvancedWorkout classes.
+
+Exercise Details: The remaining columns (Exercise Name to Advanced Exercise Sets) capture the information from the ExerciseSets and AdvancedExerciseSets classes. Note that for fields like repetitions, targetRpe, and targetRir, the template uses single columns. If your program uses AdvancedExerciseSets with per-set values (e.g., repetitions is a Listing<Int>?), you would need to store these as a comma-separated list within the single cell. For example, "8, 6, 4" for a 3-set exercise.
