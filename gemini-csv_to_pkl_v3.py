@@ -337,8 +337,12 @@ def parse_pkl_schemes_file(filepath):
 
 def format_workout_for_android(raw_text):
     """
-        Formats workout text for Android, converting comma-separated sets
-        into an HTML Unordered List (<ul>).
+        Parses mixed-format workout text for Android AnnotatedString.
+        Handles:
+        - Instructions appearing before 'Rest:'
+        - Instructions appearing after 'Rest:' (with or without 'Notes:' label)
+        - Redundant words like 'Rest: 60s rest'
+        - Auto-formatting lists vs inline text
         """
     lines = raw_text.strip().split('\n')
     html_output = ""
@@ -349,57 +353,100 @@ def format_workout_for_android(raw_text):
 
         clean_line = line.strip()
 
-        # --- 1. Parse "Rest" vs "Notes" ---
-        rest_data = ""
-        notes_data = ""
+        rest_val = ""
+        final_notes = ""
 
-        if "Notes:" in clean_line:
-            parts = clean_line.split("Notes:")
-            # Clean up the Rest string (remove "Rest:" and trailing dots)
-            rest_data = parts[0].replace("Rest:", "").strip().rstrip('.')
-            notes_data = parts[1].strip()
+        # --- 1. Identify "Rest:" block ---
+        if "Rest:" in clean_line:
+            # Split into [Pre-Rest-Text, Rest-And-After]
+            parts = clean_line.split("Rest:", 1)
+
+            # Text found BEFORE 'Rest:' is definitely a note/instruction
+            pre_rest_note = parts[0].strip()
+
+            # The part AFTER 'Rest:' needs further parsing
+            remainder = parts[1].strip()
+
+            # Check if explicit "Notes:" label exists in the remainder
+            if "Notes:" in remainder:
+                r_parts = remainder.split("Notes:", 1)
+                rest_raw = r_parts[0].strip()
+                post_rest_note = r_parts[1].strip()
+            else:
+                # No "Notes:" label.
+                # We assume the Rest duration ends at the first period followed by space,
+                # or is just the whole string if short.
+                if ". " in remainder:
+                    r_parts = remainder.split('. ', 1)
+                    rest_raw = r_parts[0].strip()
+                    post_rest_note = r_parts[1].strip()
+                else:
+                    # Handle case like "Rest: 60s." (trailing dot)
+                    rest_raw = remainder.rstrip('.')
+                    post_rest_note = ""
+
+            # Clean up the extracted Rest value (remove " rest", "mins" standardization if needed)
+            # Example input: "60s rest" -> "60s"
+            rest_val = re.sub(r'\s+rest$', '', rest_raw, flags=re.IGNORECASE)
+
+            # Combine notes found before and after the Rest tag
+            notes_list = [n for n in [pre_rest_note, post_rest_note] if n]
+            final_notes = " ".join(notes_list)
+
         else:
-            # Handle lines without "Notes:" (e.g. Superset instructions)
-            # Split by first period to separate Rest from Instruction
-            clean_line = clean_line.replace("Rest:", "").strip()
-            parts = clean_line.split('. ', 1)
-            rest_data = parts[0].strip()
-            if len(parts) > 1:
-                notes_data = parts[1].strip()
+            # "Rest:" keyword not found -> Entire line is a note
+            final_notes = clean_line
 
-        # --- 2. Format the Notes into a List ---
-        formatted_notes = ""
+        # --- 2. Format the Notes (List detection) ---
+        formatted_notes_html = ""
 
-        if notes_data:
-            # We need to split by comma, BUT we must avoid splitting commas inside parentheses
-            # (e.g., "failing, 15 reps").
-            # We use Regex to split only if a comma is followed by whitespace and a digit+x (e.g., ", 2x")
-            # OR if it's a simple list without parentheses.
+        if final_notes:
+            # Logic: Split into list items if comma implies a set count (e.g. ", 2x")
+            split_items = re.split(r',\s+(?=\d+x)', final_notes)
 
-            # Regex explanation: Match a comma and whitespace, followed by a Lookahead for a digit and 'x'
-            split_items = re.split(r',\s+(?=\d+x)', notes_data)
+            # Fallback: If only simple commas exist and no parens, strict split
+            if len(split_items) == 1 and ',' in final_notes and '(' not in final_notes:
+                # But don't split semantic sentences like "seated using a cable, but standing..."
+                # Heuristic: Only split if the parts look short or technical?
+                # For safety with the new verbose inputs, we usually stick to the regex above.
+                # However, your explicit set inputs (1x20...) work best with the list.
+                # Let's trust the Regex '(?=\d+x)' for sets, and keep sentences as paragraphs.
+                pass
 
-            # Fallback: If regex didn't find 'Nx' pattern but there are commas and no brackets,
-            # assume it's a simple list of exercises.
-            if len(split_items) == 1 and ',' in notes_data and '(' not in notes_data:
-                split_items = notes_data.split(',')
-
-            # Build the list items <li>
-            list_items_html = ""
+            processed_items = []
             for item in split_items:
-                item_text = item.strip()
-                # Bold RPE for readability
-                item_text = item_text.replace("RPE", "<b>RPE</b>")
-                list_items_html += f"<li>{item_text}</li>"
+                # Bold common keywords
+                txt = item.strip()
+                txt = txt.replace("RPE", "<b>RPE</b>")
+                txt = txt.replace("RIR", "<b>RIR</b>")
+                processed_items.append(txt)
 
-            # Wrap in <ul>
-            formatted_notes = f"<ul>{list_items_html}</ul>"
+            # Render logic
+            if len(processed_items) > 1:
+                # It's a list of sets
+                list_html = "".join(f"<li>{item}</li>" for item in processed_items)
+                formatted_notes_html = f"<ul>{list_html}</ul>"
+            else:
+                # It's a sentence or single instruction
+                formatted_notes_html = " " + processed_items[0]
 
-        # --- 3. Assemble Final HTML ---
-        # Note: We put "Notes:" label before the <ul>
-        # We use <p> as the container for the whole block
+        # --- 3. Construct HTML Paragraph ---
+        paragraph_content = ""
 
-        html_output += f"<p><b>Rest:</b> {rest_data}<br><b>Notes:</b>{formatted_notes}</p>\n"
+        if rest_val:
+            paragraph_content += f"<b>Rest:</b> {rest_val}"
+
+        if formatted_notes_html:
+            # If we had rest, break line. If no rest, just start with notes.
+            if paragraph_content:
+                paragraph_content += "<br>"
+
+            # If it's a list, the <ul> handles its own newlines, so we don't need extra spacing
+            # We add the "Notes:" label
+            paragraph_content += f"<b>Notes:</b>{formatted_notes_html}"
+
+        if paragraph_content:
+            html_output += f"<p>{paragraph_content}</p>\n"
 
     return html_output
 
@@ -560,9 +607,10 @@ def parse_advanced_template_csv(csv_filepath, exercise_replacements, schemes_map
 # --- Main Execution ---
 if __name__ == "__main__":
     # Configuration for X Frame 2.0 (as an example of new functionality)
+    schemes_file_path = "/Users/darronporter/PycharmProjects/ykd_workout_program_pkl_generator/workout_programs/X Frame 2.0/X Frame 2.0 ExerciseSchemes.pkl"
+
     directory = '/Users/darronporter/PycharmProjects/ykd_workout_program_pkl_generator/workout_programs/X Frame 2.0'
     csv_file_path = f"{directory}/X Frame 2.0.csv"
-    schemes_file_path = f"{directory}/X Frame 2.0 ExerciseSchemes.txt"
     output_filename = f"{directory}/X Frame 2.0 - Generated_{datetime.datetime.now().timestamp()}.pkl"
 
     # Load Schemes if file exists
@@ -959,7 +1007,7 @@ if __name__ == "__main__":
     "Neutral-Grip Lat Pull-Down": "Cable Close Grip Pulldown",
     "Neutral-Grip Lat Pulldown": "Cable Parallel Grip Pulldown",
     "Neutral-Grip Pull-Up": "Neutral-Grip Pull-Up",
-    "Nordic Ham Curl": "Nordic Ham Curl",
+    "Nordic Ham Curl": "Self-assisted Inverse Leg Curl (on floor)",
     "One Arm Dumbbell Row": "Dumbbell Bent-over Row",
     "One-Arm Dumbbell Row": "Dumbbell Bent-over Row",
     "One-Arm Row": "Dumbbell Bent-over Row",
@@ -976,7 +1024,7 @@ if __name__ == "__main__":
     "Pec Deck": "Lever Pec Deck Fly",
     "Pendlay Deficit Row": "Pendlay Row",
     "Pistol Squat": "Single Leg Squat (pistol)",
-    "Pre-Exhaustion Nordic Ham Curl/Leg Extension": "Nordic Ham Curl",
+    "Pre-Exhaustion Nordic Ham Curl/Leg Extension": "Self-assisted Inverse Leg Curl (on floor)",
     "Prisoner Single-Leg 45 Back Extension": "Single Leg 45° Hyperextension",
     "Prisoner Single-Leg 45-Degree Hyper": "Single Leg 45° Hyperextension",
     "Prisoner Single-Leg Back Extension": "Single Leg 45° Hyperextension",
@@ -1126,7 +1174,7 @@ if __name__ == "__main__":
     "Glute Abduction": "Lever Seated Hip Abduction",
     "Glute Bridge": "Barbell Hip Thrust",
     "Glute Focused Back Extension": "Lever Back Extension",
-    "Glute Leg Press": "Sled 45º Leg Press",
+    "Glute Leg Press": "Sled 45° Leg Press",
     "Glute Lunge": "Rear Lunge",
     "Glute Max Kickback": "Lever Bent-over Glute Kickback",
     "Glute Med Kickback": "Lever Bent-over Glute Kickback",
@@ -1150,9 +1198,9 @@ if __name__ == "__main__":
     "Lateral Raise Machine": "Lever Lateral Raise",
     "Leaning Leg Extension": "Lever Leg Extension",
     "Leg Extensions": "Lever Leg Extension",
-    "Leg Press - Feet Wide": "Sled 45º Leg Press",
-    "Leg Press - Glute Focus": "Sled 45º Leg Press",
-    "Leg Press (Glute Biased)": "Sled 45º Leg Press",
+    "Leg Press - Feet Wide": "Sled 45° Leg Press",
+    "Leg Press - Glute Focus": "Sled 45° Leg Press",
+    "Leg Press (Glute Biased)": "Sled 45° Leg Press",
     "Low Incline DB Press": "Dumbbell Incline Chest Press",
     "Low Row": "Lever Seated Low Row (plate loaded)",
     "Lying Leg Curl - Single Leg": "Lever Single Leg Seated Leg Curl",
@@ -1160,8 +1208,8 @@ if __name__ == "__main__":
     "Machine Pec Fly": "Lever Pec Deck Fly",
     "Machine Row - Upper Back": "Lever Seated High Row",
     "Navy Row": "Dumbbell Lying Row",
-    "Nordic Drop": "Nordic Ham Curl",
-    "Partial Nordic Drop": "Nordic Ham Curl",
+    "Nordic Drop": "Self-assisted Inverse Leg Curl (on floor)",
+    "Partial Nordic Drop": "Self-assisted Inverse Leg Curl (on floor)",
     "Preacher Curl Machine": "Lever Preacher Curl",
     "Pull Up": "Machine-assisted Chin-up",
     "Pull Ups": "Machine-assisted Chin-up",
@@ -1172,7 +1220,7 @@ if __name__ == "__main__":
     "Rear Delt Machine Fly": "Lever Seated Reverse Fly (on pec deck)",
     "Rear Delt Row": "Lever Seated Rear Delt Row",
     "Reverse lunge": "Rear Lunge",
-    "Reverse Nordic Drop": "Nordic Ham Curl",
+    "Reverse Nordic Drop": "Self-assisted Inverse Leg Curl (on floor)",
     "Romanian Deadlift": "Barbell Straight-back Straight-leg Deadlift",
     "Seated Abduction (leaning forward)": "Lever Seated Hip Abduction",
     "Seated Adduction": "Lever Seated Hip Adduction",
