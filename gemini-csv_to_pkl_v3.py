@@ -127,13 +127,23 @@ class Microcycle(PKLBase):
         return f"new Microcycle {{\n" + "\n".join(filter(None, attrs)) + f"\n{'  ' * indent_level}  }}"
 
 
+class Superset(PKLBase):
+    def __init__(self, exercises=None, notes=None):
+        self.exercises = exercises if exercises is not None else Listing("AdvancedExerciseSets")
+        self.notes = notes
+
+    def to_pkl_string(self, indent_level=0, is_listing_item=False):
+        attrs = [self._format_attr(k, v, indent_level) for k, v in self.__dict__.items()]
+        return f"new Superset {{\n" + "\n".join(filter(None, attrs)) + f"\n{'  ' * indent_level}  }}"
+
+
 class AdvancedWorkout(PKLBase):
-    def __init__(self, name="", day=0, notes="", advancedExercisesSets=None):
+    def __init__(self, name="", day=0, notes="", workoutItems=None):
         self.name = name
         self.day = day
         self.notes = notes
-        self.advancedExercisesSets = advancedExercisesSets if advancedExercisesSets is not None else Listing(
-            "AdvancedExerciseSets")
+        # Rename advancedExercisesSets to workoutItems to support polymorphism (Superset or AdvancedExerciseSets)
+        self.workoutItems = workoutItems if workoutItems is not None else Listing("WorkoutItem")
 
     def to_pkl_string(self, indent_level=0, is_listing_item=False):
         attrs = [self._format_attr(k, v, indent_level) for k, v in self.__dict__.items()]
@@ -344,6 +354,8 @@ def format_workout_for_android(raw_text):
         - Redundant words like 'Rest: 60s rest'
         - Auto-formatting lists vs inline text
         """
+    if not raw_text:
+        return ""
     lines = raw_text.strip().split('\n')
     html_output = ""
 
@@ -498,6 +510,10 @@ def parse_advanced_template_csv(csv_filepath, exercise_replacements, schemes_map
 
     last_meso_name, last_micro_name, last_workout_name = "", "", ""
 
+    # Superset tracking
+    current_superset = None
+    last_superset_id = None
+
     with open(csv_filepath, 'r', encoding='utf-8') as f:
         # Detect delimiter
         sample = f.read(2048)
@@ -508,27 +524,70 @@ def parse_advanced_template_csv(csv_filepath, exercise_replacements, schemes_map
         except csv.Error:
             dialect = None
 
-        delimiter = dialect.delimiter if dialect else ';'  # Default to semicolon
-        reader = list(csv.DictReader(f, delimiter=delimiter))
+        # Fallback to comma if semicolon fails, as sniffer can be fickle with metadata
+        if dialect:
+            delimiter = dialect.delimiter
+        else:
+             delimiter = ',' # Default to comma for standard CSVs
+             # Quick check if it looks like semicolon
+             if ';' in sample and sample.count(';') > sample.count(','):
+                 delimiter = ';'
 
-        # 1. Populate Program object from the first 1 rows
-        if reader:
-            program_details = reader[0]
-            program_obj.name = program_details.get("Program Name", "").strip()
-            program_obj.arthur = program_details.get("Program Arthur",
-                                                     "").strip()  # Handle typo in CSV if needed (Arthur -> Author)
-            if not program_obj.arthur: program_obj.arthur = program_details.get("Program Author", "").strip()
-            program_obj.description = format_description_for_android(program_details.get("Program Description", "").strip())
-            program_obj.shortDescription = program_details.get("Program Short Description", "").strip()
-            program_obj.programLength = program_details.get("Program Length", "").strip()
-            program_obj.level = program_details.get("Program Level", "").strip()
-            program_obj.programEquipment = program_details.get("Program Equipment", "").strip()
-            program_obj.daysPerWeek = program_details.get("Days Per Week", "").strip()
+        # Read as list of lists first to handle metadata vs header
+        f.seek(0)
+        csv_reader = list(csv.reader(f, delimiter=delimiter))
 
-        # 3. Process each data row (starting from row 1, index 9)
-        for row_data in reader:
+        # 1. Parse Metadata (first ~8 rows)
+        meta_map = {
+            "Program Name": "name",
+            "Program Arthur": "arthur",
+            "Program Author": "arthur",
+            "Program Description": "description",
+            "Program Short Description": "shortDescription",
+            "Program Length": "programLength",
+            "Program Level": "level",
+            "Program Equipment": "programEquipment",
+            "Days Per Week": "daysPerWeek"
+        }
+
+        header_row_index = -1
+
+        for i, row in enumerate(csv_reader):
+            if not row: continue
+
+            # Check for metadata
+            # Avoid mistaking a header row (e.g. "Program Name", "Program Arthur") for a KV pair
+            key = row[0].strip()
+            if key in meta_map and len(row) > 1:
+                # If the second column is also a known metadata key, assume this is a header row, not KV
+                if row[1].strip() in meta_map:
+                    continue
+
+                attr = meta_map[key]
+                val = row[1].strip()
+                if attr == "description":
+                    val = format_description_for_android(val)
+                setattr(program_obj, attr, val)
+
+            # Check for Header
+            if "Mesocycle Name" in row:
+                header_row_index = i
+                break
+
+        if header_row_index == -1:
+             print("Warning: Could not find header row starting with 'Mesocycle Name'.")
+             return program_obj
+
+        headers = [h.strip() for h in csv_reader[header_row_index]]
+
+        # 3. Process each data row
+        for row in csv_reader[header_row_index+1:]:
             # Skip empty rows
-            if not any(v for v in row_data.values() if v and v.strip()): continue
+            if not any(cell.strip() for cell in row): continue
+
+            # Map row to dict for easier access (like DictReader)
+            # Handle potential mismatch in row length vs headers length
+            row_data = {headers[j]: row[j] for j in range(min(len(headers), len(row)))}
 
             # Get data for the current row
             meso_name = row_data.get("Mesocycle Name", "").strip()
@@ -570,6 +629,10 @@ def parse_advanced_template_csv(csv_filepath, exercise_replacements, schemes_map
                     current_microcycle_obj.advancedWorkouts.append(current_workout_obj)
                 last_workout_name = workout_name
 
+                # Reset superset tracking for new workout
+                current_superset = None
+                last_superset_id = None
+
             # Process the exercise for the current workout
             if current_workout_obj and exercise_name:
                 final_exercise_name = exercise_replacements.get(exercise_name, exercise_name)
@@ -584,8 +647,7 @@ def parse_advanced_template_csv(csv_filepath, exercise_replacements, schemes_map
                     name=final_exercise_name,
                     description = format_workout_for_android(row_data.get("Exercise Description")),
                     sets=to_int(row_data.get("Sets")),
-                    setType=SET_TYPE_MAP[row_data.get("Set Type", "1").strip()] if row_data.get("Set Type") and SET_TYPE_MAP[row_data.get(
-                        "Set Type").strip()] else 1,  # Default to 1 if missing/invalid
+                    setType=SET_TYPE_MAP[row_data.get("Set Type", "1").strip().upper()] if row_data.get("Set Type") and row_data.get("Set Type").strip().upper() in SET_TYPE_MAP else 1,  # Default to 1 if missing/invalid
                     targetRepetitions=parse_list(row_data.get("Target Repetitions"), "Int", to_int),
                     minRepetitions=to_int(row_data.get("Target Min Repetitions")),
                     maxRepetitions=to_int(row_data.get("Target Max Repetitions")),
@@ -599,19 +661,41 @@ def parse_advanced_template_csv(csv_filepath, exercise_replacements, schemes_map
                     progressionSchemeID=row_data.get("Progression Scheme ID", "").strip(),
                     advancedSetScheme=scheme_id
                 )
-                current_workout_obj.advancedExercisesSets.append(adv_exercise_set)
+
+                # Superset Logic
+                superset_id = row_data.get("Superset ID", "").strip()
+
+                if superset_id:
+                    if current_superset and superset_id == last_superset_id:
+                        # Continue adding to the existing superset
+                        current_superset.exercises.append(adv_exercise_set)
+                    else:
+                        # Start of a NEW superset
+                        current_superset = Superset()
+                        current_superset.exercises.append(adv_exercise_set)
+                        last_superset_id = superset_id
+
+                        # Add the new Superset container to the workout
+                        current_workout_obj.workoutItems.append(current_superset)
+                else:
+                    # Standalone exercise
+                    current_superset = None
+                    last_superset_id = None
+                    current_workout_obj.workoutItems.append(adv_exercise_set)
 
     return program_obj
 
 
 # --- Main Execution ---
 if __name__ == "__main__":
-    # Configuration for X Frame 2.0 (as an example of new functionality)
-    schemes_file_path = "/Users/darronporter/PycharmProjects/ykd_workout_program_pkl_generator/workout_programs/X Frame 2.0/X Frame 2.0 ExerciseSchemes.pkl"
+    # Configuration for testing (using local AdvancedProgramTemplete.csv)
+    # schemes_file_path = "/Users/darronporter/PycharmProjects/ykd_workout_program_pkl_generator/workout_programs/X Frame 2.0/X Frame 2.0 ExerciseSchemes.pkl"
+    schemes_file_path = "schemes.pkl" # Dummy path or non-existent
 
-    directory = '/Users/darronporter/PycharmProjects/ykd_workout_program_pkl_generator/workout_programs/X Frame 2.0'
-    csv_file_path = f"{directory}/X Frame 2.0.csv"
-    output_filename = f"{directory}/X Frame 2.0 - Generated_{datetime.datetime.now().timestamp()}.pkl"
+    # directory = '/Users/darronporter/PycharmProjects/ykd_workout_program_pkl_generator/workout_programs/X Frame 2.0'
+    directory = "."
+    csv_file_path = f"{directory}/AdvancedProgramTemplete.csv"
+    output_filename = f"{directory}/generated_program_v3.pkl"
 
     # Load Schemes if file exists
     schemes_map = {}
@@ -1264,12 +1348,141 @@ if __name__ == "__main__":
 
         pkl_output = program.to_pkl_string()
 
-        # Wrap in header/footer if necessary, usually just the object is fine
-        # But based on the schemes file, we might want to amend.
-        # For now, just output the program object.
+        # Define the PKL class schema to be included at the top of the output file
+        # This ensures the generated file is valid and self-contained with the new Superset structure.
+        class_definitions_pkl_str = """\
+open class WorkoutItem {}
+
+class Program {
+  name: String
+  arthur: String
+  shortDescription: String
+  description: String
+  programLength: String
+  uri: String? = null
+  level: String
+  programEquipment: String
+  daysPerWeek: String
+  mesocycles: Listing<Mesocycle>
+}
+
+class Mesocycle {
+  name: String
+  description: String
+  order: Int
+  microcycles: Listing<Microcycle>
+}
+
+class Microcycle {
+  name: String
+  description: String
+  order: Int
+  workouts: Listing<Workout>? = null
+  advancedWorkouts: Listing<AdvancedWorkout>
+}
+
+class Workout {
+  name: String
+  day: Int
+  notes: Listing<String>? = null
+  exercisesSets: Listing<ExerciseSets>? = null
+}
+
+class AdvancedWorkout {
+  name: String
+  day: Int
+  notes: String
+  // Using workoutItems to allow both Supersets and standalone exercises
+  workoutItems: Listing<WorkoutItem>
+}
+
+class Superset extends WorkoutItem {
+  exercises: Listing<AdvancedExerciseSets>
+  notes: String?
+}
+
+class ExerciseSets {
+  name: String
+  notes: Listing<String>? = null
+  sets: Int
+  repetitions: Int? = null
+  setType: String = ""
+  targetWeightPounds: Float? = null
+  targetWeightKilograms: Float? = null
+  weightIncrementPounds: Float? = null
+  weightIncrementKilograms: Float? = null
+  targetRepetitionsInReserve: Int? = null
+  targetRatePerceivedEffort: Int? = null
+  percentage1RM: Float? = null
+  progressionSchemeID: String? = null
+  minRepetitions: Int? = null
+  maxRepetitions: Int? = null
+}
+
+class AdvancedExerciseSets extends WorkoutItem {
+  name: String
+  description: String? = null
+  notes: Listing<String>? = null
+  sets: Int
+  setType: Int = 1
+  repetitions: Listing<Int>? = null
+  targetRepetitionsInReserve: Listing<Int>? = null
+  targetRatePerceivedEffort: Listing<Int>? = null
+  targetWeightPounds: Listing<Float>? = null
+  targetWeightKilograms: Listing<Float>? = null
+  weightIncrementPounds: Float? = null
+  weightIncrementKilograms: Float? = null
+  percentage1RM: Listing<Float>? = null
+  progressionSchemeID: String? = null
+  minRepetitions: Int? = null
+  maxRepetitions: Int? = null
+  advancedSetScheme: String? = null
+}
+
+class SetScheme {
+  sets: Int
+  setType: Int = 1
+  repetitions: Listing<Int>
+  targetWeightPounds: Listing<Float>
+  targetWeightKilograms: Listing<Float>
+  weightIncrementPounds: Float? = null
+  weightIncrementKilograms: Float? = null
+  targetRepetitionsInReserve: Listing<Int>
+  targetRatePerceivedEffort: Listing<Int>
+  percentage1RM: Listing<Float>
+  progressionSchemeID: String? = null
+  minRepetitions: Int? = null
+  maxRepetitions: Int? = null
+}
+
+class AdvancedSetScheme {
+  sets: Int?
+  setType: Int?
+  setTypes: Listing<Int>?
+  repetitions: Listing<Int>?
+  targetWeightPounds: Listing<Float>?
+  targetWeightKilograms: Listing<Float>?
+  weightIncrementPounds: Float?
+  weightIncrementKilograms: Float?
+  targetRepetitionsInReserve: Listing<Int>?
+  targetRatePerceivedEffort: Listing<Int>?
+  percentage1RM: Listing<Float>?
+  progressionSchemeID: String?
+  minRepetitions: Int?
+  maxRepetitions: Int?
+  minRepetitionsList: Listing<Int>?
+  maxRepetitionsList: Listing<Int>?
+  notes: String?
+}
+"""
+
+        # Combine the module header, class definitions, and the generated program instance
+        # Note: Adjust module name as needed or keep generic
+        header = f"module com.example.programs.MyAdvancedProgram\n\n{class_definitions_pkl_str}\n"
+        full_pkl_output = f"{header}\n// --- Program Instance ---\n{pkl_output}\n"
 
         with open(output_filename, "w", encoding="utf-8") as f:
-            f.write(pkl_output)
+            f.write(full_pkl_output)
 
         print(f"Successfully generated PKL file: {output_filename}")
 
