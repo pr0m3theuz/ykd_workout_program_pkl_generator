@@ -434,8 +434,10 @@ See the main [YKD repository](https://github.com/pr0m3theuz/workout-app) for ful
 
 ---
 
-**Related Projects:**
-- [YKD Mobile App](https://github.com/pr0m3theuz/workout-app) - Android workout tracking application
+**Part of the YKD Ecosystem:**
+- [YKD Mobile App](https://github.com/pr0m3theuz/workout-app) - Android workout tracking
 - [YKD Server](https://github.com/pr0m3theuz/workout-app-server) - Sync infrastructure
+- [YKD Program Importer](https://github.com/pr0m3theuz/ykd-import-programs-kmp) - Desktop program management
+
 
 *Part of the YKD ecosystem - Local-first workout tracking with structured programming.*
